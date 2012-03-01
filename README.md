@@ -38,6 +38,13 @@ For different configurations, rails_admin_map_field can be configured with the f
 - `default_latitude` - the latitude to center the map shown on if the latitude field is blank. Defaults to 51.5, the latitude of London, UK.
 - `default_longitude` - the longitude used if the longitude field is blank. Defaults to -0.126, the longitude of London, UK.
 
+- `places_searchbox` - display a searchbox to find locations using Google places. Defaults to false.
+
+- `include_jquery` - include jQuery before calls to google maps? Defaults to false.
+
+- `map_x`, `map_y` - width and height parameters for the map. Defaults to 500 x 300
+
+
 A more complicated configuration example:
 
 ```ruby
@@ -49,6 +56,9 @@ RailsAdmin.config do |config|
         google_api_key "a1b2c3d4e5f6deadbeef"
         default_latitude -34.0  # Sydney, Australia
         default_longitude 151.0
+        map_x 600
+        map_y 400
+        places_searchbox true
       end
     end
   end
