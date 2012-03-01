@@ -1,6 +1,7 @@
 = javascript_fallback "//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js", "/javascripts/rails_admin/jquery-1.5.1.min.js", "typeof jQuery == 'undefined'"
 
-= javascript_include_tag ("http://maps.googleapis.com/maps/api/js?key=#{field.google_api_key}&sensor=false&libraries=places")
+- if field.include_jquery
+  = javascript_include_tag ("http://maps.googleapis.com/maps/api/js?key=#{field.google_api_key}&sensor=false&libraries=places")
 
 = javascript_tag do
   :plain
@@ -16,20 +17,23 @@
 
       var map = new google.maps.Map(document.getElementById("#{field.dom_name}"), myOptions);
       
-      var input = document.getElementById('mapSearchField');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      
-      autocomplete.bindTo('bounds', map);
-      
-      google.maps.event.addListener(autocomplete, 'place_changed', function() {
-        // Lets keep implementation to a viewport relocation only at this stage
-        var place = autocomplete.getPlace();
-        if (place.geometry.viewport) {
-          map.fitBounds(place.geometry.viewport);
-        } else {
-          map.setCenter(place.geometry.location);
-        }
-      });
+  - if field.places_searchbox
+    :plain
+        var input = document.getElementById('mapSearchField');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        
+        autocomplete.bindTo('bounds', map);
+        
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+          // Lets keep implementation to a viewport relocation only at this stage
+          var place = autocomplete.getPlace();
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(14);
+          }
+        });
 
   - if form.object.send(field.name) && form.object.send(field.longitude_field)
     :plain
@@ -59,8 +63,9 @@
       }
 
     });
-%div.map-input-select
-  %input{:id => "mapSearchField"}
-%div.ramf-map-container{:id => field.dom_name, :style => "width:500px;height:300px"}
+- if field.places_searchbox
+  %div.map-input-select
+    %input{:id => "mapSearchField", :onkeypress => "return event.keyCode!=13"}
+%div.ramf-map-container{:id => field.dom_name, :style => "width:#{field.map_x.to_s}px;height:#{field.map_y.to_s}px"}
 = form.send :hidden_field, field.name, :id => field.latitude_dom_name
 = form.send :hidden_field, field.longitude_field, :id => field.longitude_dom_name

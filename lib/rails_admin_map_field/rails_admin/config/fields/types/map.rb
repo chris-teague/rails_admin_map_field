@@ -32,6 +32,22 @@ module RailsAdmin::Config::Fields::Types
     register_instance_option(:default_zoom_level) do
       8
     end
+    
+    register_instance_option(:places_searchbox) do
+      false
+    end
+    
+    register_instance_option(:include_jquery) do
+      false
+    end
+    
+    register_instance_option(:map_x) do
+      500
+    end
+    
+    register_instance_option(:map_y) do
+      300
+    end
 
     def dom_name
       @dom_name ||= "#{bindings[:form].object_name}_#{@name}_#{@longitude_field}"
